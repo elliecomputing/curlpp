@@ -25,7 +25,6 @@
 #define CURLPP_EASY_HPP
 
 
-#include "internal/buildconfig.h"
 #include "internal/CurlHandle.hpp"
 #include "internal/OptionList.hpp"
 
@@ -43,7 +42,7 @@ namespace curlpp
 	* Detailed description.
 	*/
 
-	class CURLPPAPI Easy
+	class Easy
 	{
 
 	public: 
@@ -56,7 +55,7 @@ namespace curlpp
 		* This allow to have a handle, which might have
 		* some option set, but we don't care about them.
 		*/
-		Easy(std::auto_ptr<internal::CurlHandle> handle);
+		Easy(std::unique_ptr<internal::CurlHandle> handle);
 		virtual ~Easy();
 
 		/**
@@ -75,7 +74,7 @@ namespace curlpp
 		* This function will set the option value of the OptionBase to the 
 		* handle. 
 		*/
-		virtual void setOpt(std::auto_ptr<OptionBase> option);
+		virtual void setOpt(std::unique_ptr<OptionBase> option);
 
 		/**
 		* This function will set the option value of the OptionBase to the 
@@ -149,9 +148,9 @@ namespace curlpp
 		* to retreive option.
 		*/
 		template<typename T>
-		void getInfo(CURLINFO info, T & value);
+		void getInfo(CURLINFO info, T & value) const;
 
-		std::auto_ptr<internal::CurlHandle> mCurl;
+		std::unique_ptr<internal::CurlHandle> mCurl;
 
 		internal::OptionList mOptions;
 
@@ -162,13 +161,10 @@ namespace curlpp
 
 namespace cURLpp = curlpp;
 
-
-#ifdef CURLPP_INCLUDE_TEMPLATE_DEFINITIONS
 #include "Easy.inl"
-#endif
 
 // Not quite sure if we shouldn't pass a const handle and clone it instead.
-CURLPPAPI std::ostream & operator<<(std::ostream & stream, const curlpp::Easy & handle);
+std::ostream & operator<<(std::ostream & stream, const curlpp::Easy & handle);
 
 
 #endif // #ifndef CURLPP_EASY_HPP

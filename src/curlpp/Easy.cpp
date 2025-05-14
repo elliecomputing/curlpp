@@ -21,11 +21,12 @@
  *    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+
 #include "curlpp/Easy.hpp"
 #include "curlpp/Options.hpp"
 
-#include "curlpp/internal/global.h"
-#include "curlpp/internal/buildconfig.h"
+
+#include <memory>
 
 
 curlpp::Easy::Easy()
@@ -33,8 +34,8 @@ curlpp::Easy::Easy()
 {}
 
 
-curlpp::Easy::Easy(std::auto_ptr<internal::CurlHandle> handle)
-  : mCurl(handle)
+curlpp::Easy::Easy(std::unique_ptr<internal::CurlHandle> handle)
+    : mCurl(std::move(handle))
 {}
 
 
@@ -64,7 +65,7 @@ curlpp::Easy::setOpt(const OptionBase & option)
 
 
 void
-curlpp::Easy::setOpt(std::auto_ptr<OptionBase> option)
+curlpp::Easy::setOpt(std::unique_ptr<OptionBase> option)
 {
 	option->updateHandleToMe(mCurl.get());
 	mOptions.setOpt(option.release());    
@@ -119,6 +120,3 @@ std::ostream & operator<<(std::ostream & stream, const curlpp::Easy & request)
 }
 
 
-#if defined(CURLPP_TEMPLATE_EXPLICIT_INSTANTIATION)
-	#include "./Easy.ins"
-#endif

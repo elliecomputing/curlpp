@@ -21,7 +21,6 @@
 *    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "curlpp/internal/global.h"
 #include "curlpp/internal/CurlHandle.hpp"
 
 #include "curlpp/cURLpp.hpp"
@@ -34,7 +33,7 @@
 
 
 using std::memset;
-using std::auto_ptr;
+using std::unique_ptr;
 
 
 namespace curlpp
@@ -70,31 +69,31 @@ CURL * CurlHandle::getHandle() const
 
 
 CurlHandle::CurlHandle() 
-	: mException(NULL)
+	: mException(nullptr)
 {
 	memset(mErrorBuffer,0,CURL_ERROR_SIZE + 1);
 	mCurl = curl_easy_init();
-	runtimeAssert("Error when trying to curl_easy_init() a handle", mCurl != NULL);
+	runtimeAssert("Error when trying to curl_easy_init() a handle", mCurl != nullptr);
 	errorBuffer(mErrorBuffer);
 }
 
 
 CurlHandle::CurlHandle(CURL * handle) 
-	: mException(NULL)
+	: mException(nullptr)
 {
 	memset(mErrorBuffer,0,CURL_ERROR_SIZE + 1);
 	mCurl = handle;
-	runtimeAssert("Error when trying to curl_easy_init() a handle", mCurl != NULL);
+	runtimeAssert("Error when trying to curl_easy_init() a handle", mCurl != nullptr);
 	errorBuffer(mErrorBuffer);
 }
 
 
-std::auto_ptr<CurlHandle> 
+std::unique_ptr<CurlHandle> 
 CurlHandle::clone() const
 {
 	CURL * cHandle = curl_easy_duphandle(mCurl);
-	runtimeAssert("Error when trying to curl_easy_duphandle() a handle", cHandle != NULL);
-	auto_ptr<CurlHandle> newHandle(new CurlHandle(cHandle));
+	runtimeAssert("Error when trying to curl_easy_duphandle() a handle", cHandle != nullptr);
+	unique_ptr<CurlHandle> newHandle(new CurlHandle(cHandle));
 
 	return newHandle;
 }
@@ -105,7 +104,7 @@ CurlHandle::~CurlHandle()
 	if (mException)
 	{
 		delete mException;
-		mException = NULL;
+		mException = nullptr;
 	}
 	curl_easy_cleanup(mCurl);
 }
@@ -333,8 +332,8 @@ CurlHandle::throwException()
 {
   if(mException) 
   {
-    std::auto_ptr< cURLpp::CallbackExceptionBase > e(mException);
-    mException = NULL;
+    std::unique_ptr< cURLpp::CallbackExceptionBase > e(mException);
+    mException = nullptr;
     e->throwMe();
   }
 }
