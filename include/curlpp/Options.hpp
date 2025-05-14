@@ -284,6 +284,15 @@ namespace options
 	typedef curlpp::OptionTrait<curl_ftpssl, CURLOPT_FTP_SSL> FtpSsl;
 	typedef curlpp::OptionTrait<curl_ftpauth, CURLOPT_FTPSSLAUTH> FtpSslAuth;
 
+	/**
+	* SFTP options.
+	*/
+    typedef curlpp::OptionTrait<long, CURLOPT_SSH_AUTH_TYPES> SShAuthTypes;
+	typedef curlpp::OptionTrait<std::string, CURLOPT_SSH_PUBLIC_KEYFILE> SshPublicKeyFile;
+    typedef curlpp::OptionTrait<std::string, CURLOPT_SSH_PRIVATE_KEYFILE> SshPrivateKeyFile;
+    typedef curlpp::OptionTrait<std::string, CURLOPT_SSH_HOST_PUBLIC_KEY_MD5> SshHostPublicKeyMD5;
+    typedef curlpp::OptionTrait<std::string, CURLOPT_SSH_KNOWNHOSTS> SshKnowHostsFile;
+    // not yet KeyFunction, don't know how to do
 
 	/**
 	* Protocol options.
