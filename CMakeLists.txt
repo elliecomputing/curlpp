@@ -67,12 +67,6 @@ else()
   message(FATAL_ERROR "Could not find CURL")
 endif()
 
-# All following targets should search these directories for headers
-include_directories( 
-  ${CMAKE_CURRENT_SOURCE_DIR}/include
-  ${CURL_INCLUDE_DIRS}
-)
-
 #########################################################################################
 # Define Targets
 
@@ -86,8 +80,17 @@ file(GLOB_RECURSE SourceFileList "${CMAKE_CURRENT_SOURCE_DIR}/src/*")
 add_library(${PROJECT_NAME} SHARED ${HeaderFileList} ${SourceFileList})
 target_link_libraries(${PROJECT_NAME} ${CURL_LIBRARIES} ${CONAN_LIBS})
 set_target_properties(${PROJECT_NAME} PROPERTIES SOVERSION 1 VERSION 1.0.0)
+# All following targets should search these directories for headers
+target_include_directories(${PROJECT_NAME} PUBLIC 
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${CURL_INCLUDE_DIRS}
+)
 
 add_library(${PROJECT_NAME}_static STATIC ${HeaderFileList} ${SourceFileList})
+target_include_directories(${PROJECT_NAME}_static PUBLIC 
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${CURL_INCLUDE_DIRS}
+)
 
 # Make sure that on unix-platforms shared and static libraries have
 # the same root name, but different suffixes.
